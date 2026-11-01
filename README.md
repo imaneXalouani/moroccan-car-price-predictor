@@ -1,138 +1,73 @@
-# 🚗 Moroccan Car Price Predictor
+# Moroccan Car Price Predictor
 
+A Streamlit application that estimates **used-car asking prices in Moroccan dirhams (MAD)** from vehicle characteristics. It combines a serialized regression model with feature preparation and a guided user interface.
 
+**Academic project by Marouane Daouki and Imane Alouani.**
 
-## Overview
+## What the code demonstrates
 
-The Moroccan Car Price Predictor is a machine learning application that estimates the market value of used cars in Morocco based on data collected from Avito.ma marketplace. This tool helps buyers and sellers make informed decisions by providing accurate price predictions based on various vehicle attributes.
+- Preparing numeric and categorical vehicle features with Pandas and NumPy.
+- Applying saved brand/model frequency mappings and location encodings.
+- Loading a trained model and supporting artifacts through Joblib.
+- Integrating predictions into a Streamlit interface with Plotly visualizations.
 
-## ✨ Features
+[Prediction logic](model.py) · [Application](app.py) · [Dependencies](requirements.txt)
 
-- **Accurate Price Predictions**: Utilizes machine learning to predict car prices with R² score of 0.84
-- **Interactive UI**: User-friendly interface built with Streamlit for easy data input
-- **Market Insights**: Visual representations of Moroccan car market trends
-- **Comprehensive Data**: Model trained on thousands of vehicle listings from Avito.ma
+## Prediction workflow
 
-## 🛠️ Technology Stack
-
-- **Python**: Core programming language
-- **Pandas & NumPy**: Data manipulation and analysis
-- **Scikit-learn / XGBoost**: Machine learning models
-- **Joblib**: Model serialization
-- **Streamlit**: Interactive web application
-- **Plotly**: Data visualization
-- **CSS/HTML**: UI styling
-
-## 📊 Project Structure
-
-```
-moroccan-car-price-predictor/
-├── app.py                    # Main Streamlit application file
-├── model.py                  # Prediction function and model logic
-├── best_car_price_model.pkl  # Serialized machine learning model
-├── requirements.txt          # Python dependencies
-├── README.md                 # Project documentation
-├── favicon.ico.svg           # Project logo
-└── data/                     # Data files used by the application
-    ├── marque_list.pkl       # List of car brands
-    ├── modele_list.pkl       # List of car models
-    ├── boite_list.pkl        # List of transmission types
-    ├── carburant_list.pkl    # List of fuel types
-    ├── etat_list.pkl         # List of vehicle conditions
-    ├── localisation_list.pkl # List of Moroccan cities
-    ├── marque_freq.pkl       # Brand frequency data
-    ├── modele_freq.pkl       # Model frequency data
-    └── localisation_mapping.pkl # City mapping data
+```mermaid
+flowchart LR
+    U[Vehicle details] --> F[Feature preparation and saved mappings]
+    F --> M[Serialized regression model]
+    M --> P[Estimated price in MAD]
+    P --> S[Streamlit result]
 ```
 
-## 🚀 Installation & Usage
+Inputs include brand, model, year, mileage, fiscal power, doors, fuel, transmission, condition, origin and location.
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/username/moroccan-car-price-predictor.git
-   cd moroccan-car-price-predictor
-   ```
+## Run locally
 
-2. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+git clone https://github.com/shirahex/moroccan-car-price-predictor.git
+cd moroccan-car-price-predictor
+python -m venv .venv
+# macOS/Linux
+source .venv/bin/activate
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+streamlit run app.py
+```
 
-3. **Run the application**:
-   ```bash
-   streamlit run app.py
-   ```
+Open http://localhost:8501. Run from the repository root: the application and model code load the `.pkl` artifacts through relative paths. A serialized model may require library versions compatible with the original training environment; an exact training-environment lockfile is not included.
 
-4. **Open in browser**:
-   The application will be available at `http://localhost:8501`
+## Repository map
 
-## 📱 How to Use
+| File | Role |
+| --- | --- |
+| [app.py](app.py) | Input forms, prediction display and visualizations |
+| [model.py](model.py) | Feature transformation and model inference |
+| `best_car_price_model.pkl` | Saved model |
+| `*_list.pkl`, `*_freq.pkl`, `*_mapping.pkl` | Category lists and feature mappings |
+| [requirements.txt](requirements.txt) | Runtime packages |
 
-1. Fill in your car details including:
-   - Brand and model
-   - Year of manufacture
-   - Mileage
-   - Fiscal power
-   - Number of doors
-   - Fuel type
-   - Transmission type
-   - Origin (imported or local)
-   - Vehicle condition
-   - Location (city)
+The supporting artifacts are in the root directory. The raw listing dataset, scraping code and complete training/evaluation notebook are not included in this checkout.
 
-2. Click "Predict Price" to get an estimated market value in Moroccan Dirhams (MAD)
+## Data and evaluation
 
-3. View additional insights about factors affecting the price
+The project's original documentation identifies Avito.ma vehicle listings as the data source. Treat the prediction as an estimate of listing-market patterns rather than a verified transaction value.
 
-## 📈 Model Performance
+Earlier documentation reported performance metrics, but the repository does not provide the split, evaluation predictions or training notebook needed to reproduce them. Consequently, this README does not present those numbers as verified results. A reproducible evaluation should publish the dataset snapshot, split procedure, training code, package versions and error analysis.
 
-- **R² Score**: 0.84
-- **Mean Absolute Error**: 12,500 MAD
-- **Root Mean Squared Error**: 18,200 MAD
+## Known limitations
 
-## 🔍 Project Development Process
+The current feature-preparation code includes category fallbacks, notably mapping diesel to the petrol flag and mapping a customs-cleared origin to a local-origin flag. These choices can bias predictions and should be revisited against the original training pipeline before real valuation use. Unseen categories and market changes can also reduce reliability.
 
-### Data Collection
-- Web scraping of car listings from Avito.ma
-- Collection of over 80,000 vehicle entries
-- Extraction of key vehicle attributes and prices
+The price is an educational model output, not an official valuation, purchase recommendation or guarantee. Do not use application visualizations as evidence of current market statistics without the underlying dataset.
 
-### Data Preprocessing
-- Cleaning of inconsistent and missing data
-- Feature engineering to extract valuable insights
-- Encoding of categorical variables
-- Normalization of numeric features
+## Next improvements
 
-### Model Development
-- Testing of various regression algorithms
-- Hyperparameter tuning for optimal performance
-- Cross-validation to ensure model reliability
-- Final model selection based on performance metrics
+Reconstruct a reproducible training pipeline, persist preprocessing with the estimator, validate category handling and report held-out MAE/RMSE alongside a simple baseline.
 
-### Application Development
-- Creation of user-friendly interface with Streamlit
-- Integration of the predictive model
-- Development of visualization components
-- Deployment for end-user access
+## Credits
 
-## 🔑 Key Findings
-
-- Vehicle age and mileage are the strongest predictors of car value
-- Affordable brands like Dacia and Renault dominate the Moroccan market
-- Most sold used cars in Morocco are 6-10 years old
-- Diesel vehicles represent over 60% of the market
-- Automatic transmissions are gaining popularity but remain less common
-- Casablanca, Rabat, Marrakech, and Tangier are the most active cities for car sales
-
-## 👥 Contributors
-
-- Daouki Marouane
-- Alouani Imane
-
-## ⚠️ Disclaimer
-
-This application is for educational purposes only and does not represent an official valuation tool. The estimated prices should be used as reference points and not as definitive valuations.
-
-## 📄 License
-
-© 2025 Moroccan Car Price Predictor | Data sourced from Avito.ma | Created for academic purposes
+Marouane Daouki · Imane Alouani. Original project created for academic purposes. This repository does not currently include a standalone software license.
