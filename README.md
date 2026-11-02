@@ -71,3 +71,8 @@ Reconstruct a reproducible training pipeline, persist preprocessing with the est
 ## Credits
 
 Marouane Daouki · Imane Alouani. Original project created for academic purposes. This repository does not currently include a standalone software license.
+
+
+---
+
+Original repository: [shirahex/moroccan-car-price-predictor](https://github.com/shirahex/moroccan-car-price-predictor). Academic team project by Marouane Daouki and Imane Alouani.
